@@ -15,11 +15,11 @@ const renderOptions = (options) => (
 
 const Selector = () => (
   <Consumer>
-    {({ selectedSubreddit, availableSubreddits, selectSubreddit }) => (
+    {({ selectedSubreddit, availableSubreddits, setSelectedSubreddit }) => (
       <span>
         <h1>{`Selected: ${selectedSubreddit}`}</h1>
         <select
-          onChange={(e) => selectSubreddit(e.target.value)}
+          onChange={(e) => setSelectedSubreddit(e.target.value)}
           value={selectedSubreddit}
         >
           {renderOptions(availableSubreddits)}

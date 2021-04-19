@@ -1,4 +1,4 @@
-import React, { Component, createContext } from 'react';
+import React, { Component, createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { getPostsBySubreddit } from '../services/redditAPI';
@@ -6,6 +6,36 @@ import { getPostsBySubreddit } from '../services/redditAPI';
 const Context = createContext();
 const { Provider, Consumer } = Context;
 
+function RedditProvider({ children }) {
+  const [ postsBySubreddit, setPostsBySubreddit ] = useState({});
+  const [ selectedSubreddit, setSelectedSubreddit ] = useState('reactjs');
+  const [ availableSubreddits, setAvailableSubreddits ] = useState(['reactjs', 'frontend']);
+  const [ posts, setPosts ] = useState([]);
+
+  const Context = {
+    postsBySubreddit, setPostsBySubreddit, selectedSubreddit, setSelectedSubreddit,
+    availableSubreddits, setAvailableSubreddits, posts, setPosts,
+  };
+
+  const fetchPosts = async (selectedSubreddit) => {
+    await getPostsBySubreddit(selectedSubreddit)
+      .then((response) => {
+        setPostsBySubreddit({ [selectedSubreddit]: response.data.children });
+        setPosts(response.data.children.map((post) => post.data.title));
+      });
+  }
+
+  useEffect(() => {
+    fetchPosts(selectedSubreddit);
+  }, [selectedSubreddit]);
+
+  return (
+    <Provider value={Context}>
+      {children}
+    </Provider>
+  );
+}
+/*
 class RedditProvider extends Component {
   constructor(props) {
     super(props);
@@ -133,5 +163,5 @@ class RedditProvider extends Component {
 RedditProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
+*/
 export { RedditProvider as Provider, Consumer, Context };

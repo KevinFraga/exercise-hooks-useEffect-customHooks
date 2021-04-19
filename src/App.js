@@ -1,9 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 
 import Posts from './components/Posts';
 import Selector from './components/Selector';
 import { Context } from './components/RedditContext';
 
+function App() {
+  const { posts } = useContext(Context);
+  return (
+    <div>
+      <Selector />
+      <ul>
+        {posts.map((post) => (<li key={ post }>{post}</li>))}
+      </ul>
+    </div>
+  );
+}
+
+/*
 class App extends Component {
   componentDidMount() {
     const { fetchPosts } = this.context;
@@ -60,5 +73,5 @@ class App extends Component {
 }
 
 App.contextType = Context;
-
+*/
 export default App;
